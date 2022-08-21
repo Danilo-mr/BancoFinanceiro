@@ -2,7 +2,7 @@ package view;
 
 import javax.swing.*;
 
-public class FrmPrincipalVIEW extends JFrame {
+public class ContaCliente extends JFrame {
 
 
     private JPanel jpTelaPrincipal;
