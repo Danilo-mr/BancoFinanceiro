@@ -1,7 +1,12 @@
 package view;
 
+import dao.UsuarioDAO;
+import dto.UsuarioDTO;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -60,6 +65,19 @@ public class Registrar extends JFrame{
                 Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
                 panelRegistrar.setCursor(cursor);
             }
+        });
+        registrarButton.addActionListener(e -> {
+            String nome, cpf, senha;
+            nome = txtNome.getText();
+            cpf = txtCPF.getText();
+            senha = String.valueOf(txtSenha.getPassword());
+            UsuarioDTO usuarioDTO = new UsuarioDTO();
+            usuarioDTO.setNome_usuario(nome);
+            usuarioDTO.setCpf_usuario(cpf);
+            usuarioDTO.setSenha_usuario(senha);
+
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            usuarioDAO.cadastrarUsuario(usuarioDTO);
         });
     }
 

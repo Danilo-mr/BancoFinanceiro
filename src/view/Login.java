@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 public class Login extends JFrame {
     private JPanel panelLogin;
@@ -24,26 +25,32 @@ public class Login extends JFrame {
                 String cpf_usuario, senha_usuario;
                 cpf_usuario = txtCPF.getText();
                 senha_usuario = String.valueOf(txtSenha.getPassword());
-                UsuarioDTO objUsuarioDto = new UsuarioDTO();
-                objUsuarioDto.setCpf_usuario(cpf_usuario);
-                objUsuarioDto.setSenha_usuario(senha_usuario);
+
+                UsuarioDTO usuario = new UsuarioDTO();
+                usuario.setCpf_usuario(cpf_usuario);
+                usuario.setSenha_usuario(senha_usuario);
 
                 UsuarioDAO objUsuarioDao = new UsuarioDAO();
-                ResultSet rsUsuarioDao = objUsuarioDao.autenticacaoUsuario(objUsuarioDto);
+                ResultSet rsUsuarioDao = objUsuarioDao.autenticacaoUsuario(usuario);
 
                 if (rsUsuarioDao.next()) {
-                    ContaCliente objContaCliente = new ContaCliente();
-                    objContaCliente.setSize(400, 500);
-                    objContaCliente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    objContaCliente.setLocationRelativeTo(null);
-                    objContaCliente.setContentPane(objContaCliente.getJpTelaPrincipal());
-                    objContaCliente.setVisible(true);
+                    usuario.setNome_usuario(rsUsuarioDao.getString(1));
+                    usuario.setSaldo_usuario(rsUsuarioDao.getFloat(2));
+                    usuario.setId_usuario(rsUsuarioDao.getInt(3));
+                    ContaCliente frameContaCliente = new ContaCliente(usuario);
+                    frameContaCliente.setSize(400, 500);
+                    frameContaCliente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frameContaCliente.setLocationRelativeTo(null);
+                    frameContaCliente.setContentPane(frameContaCliente.getJpTelaPrincipal());
+                    frameContaCliente.setVisible(true);
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Usuário ou senha inválida");
                 }
             } catch (SQLException erro) {
                 JOptionPane.showMessageDialog(null, "LoginVIEW: " + erro);
+            } catch (ParseException ex) {
+                ex.printStackTrace();
             }
 
         });
